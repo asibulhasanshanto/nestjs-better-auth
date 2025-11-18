@@ -1,5 +1,4 @@
 import { createParamDecorator, SetMetadata, ConfigurableModuleBuilder, Inject, Injectable, Optional as Optional$1, ForbiddenException, UnauthorizedException, Module, Logger } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector, DiscoveryModule, DiscoveryService, MetadataScanner, HttpAdapterHost, APP_GUARD } from '@nestjs/core';
 import { fromNodeHeaders, toNodeHandler } from 'better-auth/node';
 import { WsException } from '@nestjs/websockets';
@@ -12,13 +11,6 @@ const HOOK_KEY = Symbol("HOOK");
 const AUTH_MODULE_OPTIONS_KEY = Symbol("AUTH_MODULE_OPTIONS");
 
 function getRequestFromContext(context) {
-  const contextType = context.getType();
-  if (contextType === "graphql") {
-    return GqlExecutionContext.create(context).getContext().req;
-  }
-  if (contextType === "ws") {
-    return context.switchToWs().getClient();
-  }
   return context.switchToHttp().getRequest();
 }
 

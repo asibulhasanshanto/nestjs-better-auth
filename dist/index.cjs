@@ -1,7 +1,6 @@
 'use strict';
 
 const common = require('@nestjs/common');
-const graphql = require('@nestjs/graphql');
 const core = require('@nestjs/core');
 const node = require('better-auth/node');
 const websockets = require('@nestjs/websockets');
@@ -9,15 +8,15 @@ const plugins = require('better-auth/plugins');
 const express = require('express');
 
 function _interopNamespaceCompat(e) {
-	if (e && typeof e === 'object' && 'default' in e) return e;
-	const n = Object.create(null);
-	if (e) {
-		for (const k in e) {
-			n[k] = e[k];
-		}
-	}
-	n.default = e;
-	return n;
+  if (e && typeof e === 'object' && 'default' in e) return e;
+  const n = Object.create(null);
+  if (e) {
+    for (const k in e) {
+      n[k] = e[k];
+    }
+  }
+  n.default = e;
+  return n;
 }
 
 const express__namespace = /*#__PURE__*/_interopNamespaceCompat(express);
@@ -28,13 +27,6 @@ const HOOK_KEY = Symbol("HOOK");
 const AUTH_MODULE_OPTIONS_KEY = Symbol("AUTH_MODULE_OPTIONS");
 
 function getRequestFromContext(context) {
-  const contextType = context.getType();
-  if (contextType === "graphql") {
-    return graphql.GqlExecutionContext.create(context).getContext().req;
-  }
-  if (contextType === "ws") {
-    return context.switchToWs().getClient();
-  }
   return context.switchToHttp().getRequest();
 }
 

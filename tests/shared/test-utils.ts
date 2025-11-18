@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { Test } from "@nestjs/testing";
 import { Module, type INestApplication } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, type ApolloDriverConfig } from "@nestjs/apollo";
 import type { Request, Response } from "express";
 import { ExpressAdapter } from "@nestjs/platform-express";
@@ -9,7 +8,6 @@ import { bearer } from "better-auth/plugins/bearer";
 import { AuthModule } from "../../src/index.ts";
 import { betterAuth } from "better-auth";
 import { TestController } from "./test-controller.ts";
-import { TestResolver } from "./test-resolver.ts";
 import { TestGateway } from "./test-gateway.ts";
 import { admin } from "better-auth/plugins/admin";
 import { adminAc, userAc } from "better-auth/plugins/admin/access";
@@ -39,18 +37,10 @@ export function createTestAppModule(auth: ReturnType<typeof createTestAuth>) {
 	@Module({
 		imports: [
 			AuthModule.forRoot({ auth }),
-			GraphQLModule.forRoot<ApolloDriverConfig>({
-				driver: ApolloDriver,
-				autoSchemaFile: true,
-				path: "/graphql",
-				context: ({ req, res }: { req: Request; res: Response }) => ({
-					req,
-					res,
-				}),
-			}),
+			
 		],
 		controllers: [TestController],
-		providers: [TestResolver, TestGateway],
+		providers: [ TestGateway],
 	})
 	class AppModule {}
 
