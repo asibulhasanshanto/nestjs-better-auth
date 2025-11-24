@@ -1,6 +1,6 @@
 {
 	"name": "@asibulhasanshanto/nestjs-better-auth",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Better Auth for NestJS forked from @thallesp/nestjs-better-aut",
 	"author": "Asibul Hasan",
 	"license": "MIT",
