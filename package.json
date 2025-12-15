@@ -1,6 +1,6 @@
 {
   "name": "@asibulhasanshanto/nestjs-better-auth",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Better Auth for NestJS forked from @thallesp/nestjs-better-aut",
   "author": "Asibul Hasan",
   "license": "MIT",
@@ -39,9 +39,12 @@
     "@biomejs/biome": "2.2.4",
     "@faker-js/faker": "^10.0.0",
     "@nestjs/apollo": "^13.1.0",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
     "@nestjs/platform-socket.io": "^11.1.6",
     "@nestjs/testing": "^11.1.6",
+    "@nestjs/websockets": "^11.1.6",
     "@swc/cli": "^0.7.8",
     "@swc/core": "^1.13.20",
     "@tsconfig/node22": "^22.0.2",
@@ -68,5 +71,8 @@
     "express": "^5.1.0",
     "graphql": "^16.11.0",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "typescript": "^5.9.3"
   }
 }
