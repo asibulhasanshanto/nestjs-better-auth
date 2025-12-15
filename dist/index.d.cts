@@ -2,7 +2,11 @@ import * as _nestjs_common from '@nestjs/common';
 import { CustomDecorator, createParamDecorator, NestModule, OnModuleInit, MiddlewareConsumer, DynamicModule, CanActivate, ExecutionContext } from '@nestjs/common';
 import { createAuthMiddleware, getSession } from 'better-auth/api';
 import { Auth as Auth$1 } from 'better-auth';
+export { Auth, BetterAuthOptions, betterAuth } from 'better-auth';
 import { DiscoveryService, MetadataScanner, HttpAdapterHost, Reflector } from '@nestjs/core';
+export { prismaAdapter } from 'better-auth/adapters/prisma';
+export { createAuthMiddleware } from 'better-auth/plugins';
+export { fromNodeHeaders, toNodeHandler } from 'better-auth/node';
 
 /**
  * Allows unauthenticated (anonymous) access to a route or controller.
@@ -200,4 +204,4 @@ declare const AFTER_HOOK_KEY: symbol;
 declare const HOOK_KEY: symbol;
 declare const AUTH_MODULE_OPTIONS_KEY: symbol;
 
-export { AFTER_HOOK_KEY, AUTH_MODULE_OPTIONS_KEY, AfterHook, AllowAnonymous, type Auth, AuthGuard, type AuthHookContext, AuthModule, AuthService, BEFORE_HOOK_KEY, type BaseUserSession, BeforeHook, HOOK_KEY, Hook, type IPermissionService, Optional, OptionalAuth, Permissions, Public, Roles, Session, type UserSession };
+export { AFTER_HOOK_KEY, AUTH_MODULE_OPTIONS_KEY, AfterHook, AllowAnonymous, AuthGuard, type AuthHookContext, AuthModule, AuthService, BEFORE_HOOK_KEY, type BaseUserSession, BeforeHook, HOOK_KEY, Hook, type IPermissionService, Optional, OptionalAuth, Permissions, Public, Roles, Session, type UserSession };
