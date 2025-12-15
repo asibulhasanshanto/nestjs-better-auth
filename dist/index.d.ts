@@ -200,5 +200,4 @@ declare const AFTER_HOOK_KEY: symbol;
 declare const HOOK_KEY: symbol;
 declare const AUTH_MODULE_OPTIONS_KEY: symbol;
 
-export { AFTER_HOOK_KEY, AUTH_MODULE_OPTIONS_KEY, AfterHook, AllowAnonymous, AuthGuard, AuthModule, AuthService, BEFORE_HOOK_KEY, BeforeHook, HOOK_KEY, Hook, Optional, OptionalAuth, Permissions, Public, Roles, Session };
-export type { Auth, AuthHookContext, BaseUserSession, IPermissionService, UserSession };
+export { AFTER_HOOK_KEY, AUTH_MODULE_OPTIONS_KEY, AfterHook, AllowAnonymous, type Auth, AuthGuard, type AuthHookContext, AuthModule, AuthService, BEFORE_HOOK_KEY, type BaseUserSession, BeforeHook, HOOK_KEY, Hook, type IPermissionService, Optional, OptionalAuth, Permissions, Public, Roles, Session, type UserSession };

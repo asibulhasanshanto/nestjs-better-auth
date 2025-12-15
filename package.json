@@ -1,6 +1,6 @@
 {
   "name": "@asibulhasanshanto/nestjs-better-auth",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Better Auth for NestJS forked from @thallesp/nestjs-better-aut",
   "author": "Asibul Hasan",
   "license": "MIT",
@@ -13,21 +13,21 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "unbuild",
-    "prepack": "bun run unbuild",
+    "build": "tsup",
+    "prepack": "bun run tsup",
     "lint": "biome lint",
     "format": "biome format",
     "check": "biome check",
     "test": "vitest"
   },
   "types": "dist/index.d.ts",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -49,11 +49,13 @@
     "@types/express": "^5.0.3",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^3.2.4",
+    "better-auth": "^1.4.1",
     "graphql": "^16.11.0",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "supertest": "^7.1.4",
+    "tsup": "^8.0.0",
     "unbuild": "^3.6.1",
     "unplugin-swc": "^1.5.7",
     "vitest": "^3.2.4"
