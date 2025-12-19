@@ -19890,6 +19890,7 @@ __export(index_exports, {
   Public: () => Public,
   Roles: () => Roles,
   Session: () => Session,
+  bearer: () => bearer,
   betterAuth: () => betterAuth,
   createAuthMiddleware: () => createAuthMiddleware,
   fromNodeHeaders: () => fromNodeHeaders,
@@ -38190,6 +38191,54 @@ function format(ms$1, options) {
   return fmtShort(ms$1);
 }
 __name(format, "format");
+function parseSetCookieHeader(setCookie) {
+  const cookies = /* @__PURE__ */ new Map();
+  const cookieArray = setCookie.split(", ");
+  cookieArray.forEach((cookieString) => {
+    const parts = cookieString.split(";").map((part) => part.trim());
+    const [nameValue, ...attributes] = parts;
+    const [name, ...valueParts] = (nameValue || "").split("=");
+    const value = valueParts.join("=");
+    if (!name || value === void 0) {
+      return;
+    }
+    const attrObj = { value };
+    attributes.forEach((attribute) => {
+      const [attrName, ...attrValueParts] = attribute.split("=");
+      const attrValue = attrValueParts.join("=");
+      const normalizedAttrName = attrName.trim().toLowerCase();
+      switch (normalizedAttrName) {
+        case "max-age":
+          attrObj["max-age"] = attrValue ? parseInt(attrValue.trim(), 10) : void 0;
+          break;
+        case "expires":
+          attrObj.expires = attrValue ? new Date(attrValue.trim()) : void 0;
+          break;
+        case "domain":
+          attrObj.domain = attrValue ? attrValue.trim() : void 0;
+          break;
+        case "path":
+          attrObj.path = attrValue ? attrValue.trim() : void 0;
+          break;
+        case "secure":
+          attrObj.secure = true;
+          break;
+        case "httponly":
+          attrObj.httponly = true;
+          break;
+        case "samesite":
+          attrObj.samesite = attrValue ? attrValue.trim().toLowerCase() : void 0;
+          break;
+        default:
+          attrObj[normalizedAttrName] = attrValue ? attrValue.trim() : true;
+          break;
+      }
+    });
+    cookies.set(name, attrObj);
+  });
+  return cookies;
+}
+__name(parseSetCookieHeader, "parseSetCookieHeader");
 function createCookieGetter(options) {
   const secure = options.advanced?.useSecureCookies !== void 0 ? options.advanced?.useSecureCookies : options.baseURL !== void 0 ? options.baseURL.startsWith("https://") ? true : false : isProduction;
   const secureCookiePrefix = secure ? "__Secure-" : "";
@@ -50381,6 +50430,100 @@ var USERNAME_ERROR_CODES = defineErrorCodes({
   INVALID_DISPLAY_USERNAME: "Display username is invalid"
 });
 
+// node_modules/better-auth/dist/plugins/bearer/index.mjs
+var bearer = /* @__PURE__ */ __name((options) => {
+  return {
+    id: "bearer",
+    hooks: {
+      before: [
+        {
+          matcher(context) {
+            return Boolean(
+              context.request?.headers.get("authorization") || context.headers?.get("authorization")
+            );
+          },
+          handler: createAuthMiddleware(async (c) => {
+            const token = c.request?.headers.get("authorization")?.replace("Bearer ", "") || c.headers?.get("Authorization")?.replace("Bearer ", "");
+            if (!token) {
+              return;
+            }
+            let signedToken = "";
+            if (token.includes(".")) {
+              signedToken = token.replace("=", "");
+            } else {
+              if (options?.requireSignature) {
+                return;
+              }
+              signedToken = (await serializeSignedCookie("", token, c.context.secret)).replace("=", "");
+            }
+            try {
+              const decodedToken = decodeURIComponent(signedToken);
+              const isValid = await createHMAC(
+                "SHA-256",
+                "base64urlnopad"
+              ).verify(
+                c.context.secret,
+                decodedToken.split(".")[0],
+                decodedToken.split(".")[1]
+              );
+              if (!isValid) {
+                return;
+              }
+            } catch (e) {
+              return;
+            }
+            const existingHeaders = c.request?.headers || c.headers;
+            const headers = new Headers({
+              ...Object.fromEntries(existingHeaders?.entries())
+            });
+            headers.append(
+              "cookie",
+              `${c.context.authCookies.sessionToken.name}=${signedToken}`
+            );
+            return {
+              context: {
+                headers
+              }
+            };
+          })
+        }
+      ],
+      after: [
+        {
+          matcher(context) {
+            return true;
+          },
+          handler: createAuthMiddleware(async (ctx) => {
+            const setCookie = ctx.context.responseHeaders?.get("set-cookie");
+            if (!setCookie) {
+              return;
+            }
+            const parsedCookies = parseSetCookieHeader(setCookie);
+            const cookieName = ctx.context.authCookies.sessionToken.name;
+            const sessionCookie = parsedCookies.get(cookieName);
+            if (!sessionCookie || !sessionCookie.value || sessionCookie["max-age"] === 0) {
+              return;
+            }
+            const token = sessionCookie.value;
+            const exposedHeaders = ctx.context.responseHeaders?.get(
+              "access-control-expose-headers"
+            ) || "";
+            const headersSet = new Set(
+              exposedHeaders.split(",").map((header) => header.trim()).filter(Boolean)
+            );
+            headersSet.add("set-auth-token");
+            ctx.setHeader("set-auth-token", token);
+            ctx.setHeader(
+              "Access-Control-Expose-Headers",
+              Array.from(headersSet).join(", ")
+            );
+          })
+        }
+      ]
+    }
+  };
+}, "bearer");
+
 // node_modules/better-auth/dist/plugins/admin/access/index.mjs
 var defaultStatements2 = {
   user: [
@@ -55492,6 +55635,7 @@ var prismaAdapter = /* @__PURE__ */ __name((prisma, config4) => {
   Public,
   Roles,
   Session,
+  bearer,
   betterAuth,
   createAuthMiddleware,
   fromNodeHeaders,

@@ -5,7 +5,7 @@ import { Auth as Auth$1 } from 'better-auth';
 export { Auth, BetterAuthOptions, betterAuth } from 'better-auth';
 import { DiscoveryService, MetadataScanner, HttpAdapterHost, Reflector } from '@nestjs/core';
 export { prismaAdapter } from 'better-auth/adapters/prisma';
-export { createAuthMiddleware } from 'better-auth/plugins';
+export { bearer, createAuthMiddleware } from 'better-auth/plugins';
 export { fromNodeHeaders, toNodeHandler } from 'better-auth/node';
 
 /**
