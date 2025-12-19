@@ -10,5 +10,5 @@ export * from "./permission-service.interface.ts";
 export { betterAuth } from "better-auth";
 export type { Auth, BetterAuthOptions } from "better-auth";
 export { prismaAdapter } from "better-auth/adapters/prisma";
-export { createAuthMiddleware } from "better-auth/plugins";
+export { createAuthMiddleware, bearer } from "better-auth/plugins";
 export { toNodeHandler, fromNodeHeaders } from "better-auth/node";
